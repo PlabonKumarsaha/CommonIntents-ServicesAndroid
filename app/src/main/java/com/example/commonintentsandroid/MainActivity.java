@@ -50,5 +50,41 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btn_email.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = et_data.getText().toString();
+                String[] addresses = new String[5];
+                addresses[0]=email;
+
+                composeEmail(addresses,"No subject");
+            }
+        });
+
+
+
+        btn_dail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String phoneNumber = et_data.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:" + phoneNumber));
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
     }
+
+
+        public void composeEmail(String[] addresses, String subject) {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+            intent.putExtra(Intent.EXTRA_EMAIL, addresses);
+            intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+        }
 }

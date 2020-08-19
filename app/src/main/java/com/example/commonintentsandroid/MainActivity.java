@@ -1,15 +1,20 @@
 package com.example.commonintentsandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.app.DownloadManager;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.Queue;
 
@@ -75,6 +80,35 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        btn_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                onCallBtnClick();
+                }
+
+
+
+        });
+
+        btn_sms.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // public void composeMmsMessage(String message, Uri attachment) {
+
+                String message ="User enters a messgae";
+                String phoneNo = et_data.getText().toString();
+                Intent intent = new Intent(Intent.ACTION_SENDTO);
+                intent.setData(Uri.parse("smsto:"+phoneNo));  // This ensures only SMS apps respond
+                intent.putExtra("sms_body", message);
+               // intent.putExtra(Intent.EXTRA_STREAM, attachment);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+              //  }
+            }
+        });
     }
 
 
@@ -87,4 +121,52 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }
+
+    public void callPhoneNumber(String phoneNumber) {
+       /* Intent intent = new Intent(Intent.ACTION_CALL);
+        intent.setData(Uri.parse("tel:" + phoneNumber));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }*/
+
+        if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:"+phoneNumber));
+            this.startActivity(callIntent);
+        }else{
+            Toast.makeText(MainActivity.this, "You don't assign permission.", Toast.LENGTH_SHORT).show();
+        }
+    }
+    //for calling permission
+    private void onCallBtnClick(){
+        if(Build.VERSION.SDK_INT <23){
+            callPhoneNumber(et_data.getText().toString());
+        }else{
+            if (ActivityCompat.checkSelfPermission(MainActivity.this,
+                    Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+
+                callPhoneNumber(et_data.getText().toString());
+            }else {
+                final String[] PERMISSIONS_STORAGE = {Manifest.permission.CALL_PHONE};
+                //Asking request Permissions
+                ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS_STORAGE, 9);
+            }
+        }
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        boolean permissionGranted = false;
+        switch(requestCode){
+            case 9:
+                permissionGranted = grantResults[0]== PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if(permissionGranted){
+            callPhoneNumber(et_data.getText().toString());
+        }else {
+            Toast.makeText(MainActivity.this, "You don't assign permission.", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

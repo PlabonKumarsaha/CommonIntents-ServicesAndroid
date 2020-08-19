@@ -135,10 +135,10 @@ public void callPhoneNumber(String phoneNumber) {
 6.  MAP : show location on map
 
 the button click will handle the function like this :
- String mapsQuery = "geo:47.6,-122?q="+et_data.getText().toString(); //takes a area name as an input for this.
-                Uri geoLocation = Uri.parse(mapsQuery);
-
-                showMap(geoLocation);
+<br>
+                 String mapsQuery = "geo:47.6,-122?q="+et_data.getText().toString(); //takes a area name as an input for this.<br>
+                 Uri geoLocation = Uri.parse(mapsQuery);
+                 showMap(geoLocation);
 
 ### map functionality... This will open the map with a the location
 
@@ -149,3 +149,4 @@ public void showMap(Uri geoLocation) {
         startActivity(intent);
     }
 }
+

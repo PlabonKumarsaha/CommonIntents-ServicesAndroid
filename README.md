@@ -141,8 +141,8 @@ the button click will handle the function like this :
                  showMap(geoLocation);
 
 ### map functionality... This will open the map with a the location
-
-public void showMap(Uri geoLocation) {
+//the function takes URI as a parameter
+     public void showMap(Uri geoLocation) {
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.setData(geoLocation);
     if (intent.resolveActivity(getPackageManager()) != null) {

@@ -109,6 +109,25 @@ public class MainActivity extends AppCompatActivity {
               //  }
             }
         });
+
+
+        btn_maps.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String mapsQuery = "geo:47.6,-122?q="+et_data.getText().toString();
+                Uri geoLocation = Uri.parse(mapsQuery);
+
+                showMap(geoLocation);
+            }
+        });
+    }
+
+    public void showMap(Uri geoLocation) {
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(geoLocation);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 
 
